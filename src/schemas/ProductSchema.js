@@ -1,12 +1,26 @@
 const { gql } = require('apollo-server-express');
 
 const ProductTypeDefs = gql`
+    enum Category {
+        Bebidas
+        Lacteos
+        Carnes
+        Frutas
+        Verduras
+        Panaderia
+        Dulces
+        Limpieza
+        Higiene
+        Enlatados
+    }
+
     type Product {
         _id: ID!
+        facturapiId: String
         name: String!
         description: String!
         price: Float!
-        category: String!
+        category: Category!
         brand: String!
         stock: Int!
         createdAt: String!
@@ -28,7 +42,7 @@ const ProductTypeDefs = gql`
         name: String!
         description: String!
         price: Float!
-        category: String!
+        category: Category!
         brand: String!
         stock: Int
         images: [String]!

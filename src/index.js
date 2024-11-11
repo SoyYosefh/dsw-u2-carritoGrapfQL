@@ -10,7 +10,9 @@ const UserTypeDefs = require('./schemas/UserSchema');
 const startServer = async () => {
     try {
         // Conectar a la base de datos MongoDB
-        await mongoose.connect('mongodb+srv://joratejedana:joratejedana@clusterdsw.7z41a.mongodb.net/?retryWrites=true&w=majority&appName=ClusterDSW');
+        await mongoose.connect('mongodb+srv://joratejedana:joratejedana@clusterdsw.7z41a.mongodb.net/?retryWrites=true&w=majority&appName=ClusterDSW')
+            .then(() => console.log('Conectado a MongoDB'))
+            .catch(err => console.error('Error al conectar a MongoDB:', err));
         // Combinar todos los typeDefs y resolvers
         const typeDefs = [ProductTypeDefs, UserTypeDefs];
         const resolvers = [ProductResolvers, UserResolvers];

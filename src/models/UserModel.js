@@ -1,6 +1,13 @@
-const moon = require('mongoose');
+const mongoose = require('mongoose');
 
-const UserModel = new moon.Schema({
+const UserModel = new mongoose.Schema({
+    facturapiId: {
+        type: String
+    },
+    rfc: {
+        type: String,
+        required: true
+    },
     name: {
         type: String,
         required: true
@@ -15,6 +22,10 @@ const UserModel = new moon.Schema({
     },
     direccion: {
         type: String,
+        required: true
+    },
+    zip: {
+        type: Number,
         required: true
     },
     tel: {
@@ -37,6 +48,6 @@ const UserModel = new moon.Schema({
     }
 });
 
-const User = moon.model('Usuario', UserModel);
+const User = mongoose.model('UsuarioFacturapi', UserModel);
 
 module.exports = User;

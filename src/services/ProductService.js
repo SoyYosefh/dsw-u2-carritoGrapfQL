@@ -1,4 +1,5 @@
 const Product = require('../models/ProductModel');
+const facturapi = require('../apis/facturapi');
 
 const getAllProducts = async () => {
     return Product.find({});
@@ -9,6 +10,8 @@ const getProductById = async (id) => {
 }
 
 const createProduct = async (product) => {
+    const facturapiProduct = await facturapi.createProduct(product);
+    product.facturapiId = facturapiProduct.id;
     return Product.create(product);
 }
 

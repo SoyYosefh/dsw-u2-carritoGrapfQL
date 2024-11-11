@@ -1,6 +1,9 @@
-const moon = require('mongoose');
+const mongoose = require('mongoose');
 
-const ProductModel = new moon.Schema({
+const ProductModel = new mongoose.Schema({
+    facturapiId: {
+        type: String
+    },
     name: {
         type: String,
         required: true
@@ -37,6 +40,6 @@ const ProductModel = new moon.Schema({
     }
 });
 
-const Product = moon.model('Product', ProductModel);
+const Product = mongoose.model('ProductFacturapi', ProductModel);
 
 module.exports = Product;
