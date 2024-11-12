@@ -13,6 +13,19 @@ async function createProduct(product) {
     return await facturapi.products.create(facturapiProduct);
 }
 
+async function updateProduct(id, product) {
+    const facturapiProduct = {
+        description: product.description,
+        price: product.price,
+    }
+
+    return await facturapi.products.update(id, facturapiProduct);
+}
+
+async function deleteProduct(id) {
+    return await facturapi.products.del(id);
+}
+
 // Clientes
 
 async function createClient(client) {
@@ -41,13 +54,14 @@ async function updateClient(id, client) {
 }
 
 async function deleteClient(id) {
-
     return await facturapi.customers.del(id);
 }
 
 module.exports = {
     createProduct,
-
+    updateProduct,
+    deleteProduct,
+    
     createClient,
     updateClient,
     deleteClient

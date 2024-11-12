@@ -17,17 +17,16 @@ const createUser = async (user) => {
 
 const updateUser = async (_id, user) => {
     const userDB = await getUserById(_id);
-    const facturapiId = userDB.facturapiId + "";
-    console.log("🚀 ~ updateUser ~ facturapiId:", facturapiId)
+    const facturapiId = userDB.facturapiId;
     await facturapi.updateClient(facturapiId, user);
-
     user.facturapiId = facturapiId;
     return User.findByIdAndUpdate(_id, user, { new: true });
 }
 
 const deleteUser = async (_id) => {
-    const user = getUserById(_id);
-    await facturapi.deleteClient(user.facturapiId);
+    const userDB = await getUserById(_id);
+    const facturapiId = userDB.facturapiId;
+    await facturapi.deleteClient(facturapiId);
     return User.findByIdAndDelete(_id);
 }
 
