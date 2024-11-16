@@ -3,9 +3,11 @@ const mongoose = require('mongoose');
 
 const ProductResolvers = require('./resolvers/ProductResolver');
 const UserResolvers = require('./resolvers/UserResolver');
+const CartResolvers = require('./resolvers/CartResolver');
 
 const ProductTypeDefs = require('./schemas/ProductSchema');
 const UserTypeDefs = require('./schemas/UserSchema');
+const CartTypeDefs = require('./schemas/CartSchema');
 
 const startServer = async () => {
     try {
@@ -14,8 +16,8 @@ const startServer = async () => {
             .then(() => console.log('Conectado a MongoDB'))
             .catch(err => console.error('Error al conectar a MongoDB:', err));
         // Combinar todos los typeDefs y resolvers
-        const typeDefs = [ProductTypeDefs, UserTypeDefs];
-        const resolvers = [ProductResolvers, UserResolvers];
+        const typeDefs = [ProductTypeDefs, UserTypeDefs, CartTypeDefs];
+        const resolvers = [ProductResolvers, UserResolvers, CartResolvers];
 
         // Crear una nueva instancia de ApolloServer
         const server = new ApolloServer({ typeDefs, resolvers });

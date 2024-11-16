@@ -16,6 +16,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "facturapi": "^4.3.0",
-    "mongoose": "^8.7.3"
+    "mongoose": "^8.7.3",
+    "node-mailjet": "^6.0.6"
   }
 }

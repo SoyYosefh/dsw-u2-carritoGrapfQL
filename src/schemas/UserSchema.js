@@ -3,7 +3,7 @@ const { gql } = require('apollo-server-express');
 const UserTypeDefs = gql`
     type User {
         _id: ID!
-        facturapiId: String!
+        facturapiId: String
         rfc: String!
         name: String!
         email: String!
