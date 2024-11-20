@@ -15,9 +15,9 @@ const getCart = async (cartId) => {
     console.log("🚀 ~ getCart ~ cartId:", cartId)
     try {
         const cart = await CartModel.findById(cartId)
-        .populate('usuario')           // Popula el usuario
-        .populate('productos.producto'); // Popula los productos dentro del carrito
-        
+            .populate('usuario')           // Popula el usuario
+            .populate('productos.producto'); // Popula los productos dentro del carrito
+
         console.log("🚀 ~ getCart ~ cart:", cart)
         if (!cart) {
             throw new Error('Carrito no encontrado');
@@ -67,7 +67,6 @@ const createCart = async (userId) => {
 // Mutation: cerrar carrito (se cambia solo el estatus a Inactivo y se agrega la fecha de cierre)
 const closeCart = async (cartId) => {
     const cartDB = await CartModel.findById(cartId).populate('productos.producto').populate('usuario');
-    console.log("🚀 ~ closeCart ~ cartDB:", cartDB)
 
     // Verificar si el carrito existe
     if (!cartDB) {
@@ -89,8 +88,24 @@ const closeCart = async (cartId) => {
             iva: cartDB.iva,
             total: cartDB.total,
         };
+        // await sendCartEmail(cartDB.usuario.email, cartDB.usuario.name, cartDetails);
 
-        await sendCartEmail(cartDB.usuario.email, cartDB.usuario.name, cartDetails);
+        // Crear la factura en Facturapi
+        const facturaApiPayload = {
+            customer: cartDB.usuario.facturapiId, // ID del cliente en Facturapi
+            items: cartDB.productos.map(producto => ({
+                product: producto.producto.facturapiId, // ID del producto en Facturapi
+                quantity: producto.cantidad // Cantidad del producto
+            })),
+            payment_form: '01',
+            use: 'G01'
+        };
+        // console.log("🚀 ~ closeCart ~ facturaApiPayload:", facturaApiPayload)
+
+        const factura = await facturapi.createFactura(facturaApiPayload);
+        console.log("🚀 ~ closeCart ~ factura:", factura)
+
+
     } catch (error) {
         console.error("Error al enviar el correo:", error.message);
     }

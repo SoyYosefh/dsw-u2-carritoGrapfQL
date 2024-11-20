@@ -57,12 +57,18 @@ async function deleteClient(id) {
     return await facturapi.customers.del(id);
 }
 
+async function createFactura(factura) {
+    return await facturapi.invoices.create(factura);
+}
+
 module.exports = {
     createProduct,
     updateProduct,
     deleteProduct,
-    
+
     createClient,
     updateClient,
-    deleteClient
+    deleteClient,
+
+    createFactura
 }
