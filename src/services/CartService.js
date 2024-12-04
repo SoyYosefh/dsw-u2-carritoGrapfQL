@@ -5,6 +5,8 @@ const UserModel = require('../models/UserModel');
 const UserServices = require('./UserService');
 const { sendCartEmail } = require('../apis/mailService');
 const { sendWhatsAppMessage } = require('../apis/twilio');
+// const MercadoPagoService = require('../apis/MercadoPagoService');
+const { generateCartPdf } = require('../utils/createPDF');
 const mongoose = require('mongoose');
 
 
@@ -92,13 +94,24 @@ const closeCart = async (cartId) => {
 
     // Enviar correo al usuario
     try {
+
+        // Hacer pago con Mercado Pago
+        // const paymentPreference = await MercadoPagoService.createPaymentPreference(cartDB);
+        // console.log('Enlace de pago:', paymentPreference.init_point);
+
+        
+
         const cartDetails = {
             productos: cartDB.productos,
             subtotal: cartDB.subtotal,
             iva: cartDB.iva,
             total: cartDB.total,
         };
-        await sendCartEmail(cartDB.usuario.email, cartDB.usuario.name, cartDetails);
+        // Enviar correo al usuario
+        // await sendCartEmail(cartDB.usuario.email, cartDB.usuario.name, cartDetails);
+
+        // Crear el PDF del carrito
+        await generateCartPdf(cartDB.usuario.email, cartDB.usuario.name, cartDetails);
 
         // Crear la factura en Facturapi
         const facturaApiPayload = {
@@ -111,6 +124,7 @@ const closeCart = async (cartId) => {
             use: 'G01'
         };
 
+        // Crear la factura en Facturapi
         // const factura = await facturapi.createFactura(facturaApiPayload);
 
         // Productos en una cadena de texto en formato de lista desordenada
@@ -130,7 +144,7 @@ const closeCart = async (cartId) => {
 
 
         // Enviar mensaje de WhatsApp
-        await sendWhatsAppMessage("+5213111572896", bodyMessage);
+        // await sendWhatsAppMessage("+5213111572896", bodyMessage);
 
 
     } catch (error) {

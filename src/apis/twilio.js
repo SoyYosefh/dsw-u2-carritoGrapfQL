@@ -14,8 +14,8 @@ async function sendWhatsAppMessage(to, message) {
             from: 'whatsapp:+14155238886',
             // contentSid: 'HX350d429d32e64a552466cafecbe95f3c',
             // contentVariables: '{"1":"12/1","2":"3pm"}',
-            to: `whatsapp:+5213111572896`,
-            // to: `whatsapp:${to}`,
+            // to: `whatsapp:+5213111572896`,
+            to: `whatsapp:${to}`,
             body: message,
             mediaUrl: imageUrl // URL de la imagen
         })
