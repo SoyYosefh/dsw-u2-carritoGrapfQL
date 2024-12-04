@@ -4,7 +4,17 @@ const ProductModel = require('../models/ProductModel');
 const UserModel = require('../models/UserModel');
 const UserServices = require('./UserService');
 const { sendCartEmail } = require('../apis/mailService');
+const { sendWhatsAppMessage } = require('../apis/twilio');
 const mongoose = require('mongoose');
+
+
+// Función para formatear la fecha
+function obtenerFechaActual() {
+    const opciones = { year: 'numeric', month: 'long', day: 'numeric' };
+    const fecha = new Date();
+    return fecha.toLocaleDateString('es-ES', opciones).replace(',', '');
+}
+
 
 const getAllCarts = async () => {
     return CartModel.find({}).populate('productos.producto').populate('usuario');
@@ -88,7 +98,7 @@ const closeCart = async (cartId) => {
             iva: cartDB.iva,
             total: cartDB.total,
         };
-        // await sendCartEmail(cartDB.usuario.email, cartDB.usuario.name, cartDetails);
+        await sendCartEmail(cartDB.usuario.email, cartDB.usuario.name, cartDetails);
 
         // Crear la factura en Facturapi
         const facturaApiPayload = {
@@ -100,10 +110,27 @@ const closeCart = async (cartId) => {
             payment_form: '01',
             use: 'G01'
         };
-        // console.log("🚀 ~ closeCart ~ facturaApiPayload:", facturaApiPayload)
 
-        const factura = await facturapi.createFactura(facturaApiPayload);
-        console.log("🚀 ~ closeCart ~ factura:", factura)
+        // const factura = await facturapi.createFactura(facturaApiPayload);
+
+        // Productos en una cadena de texto en formato de lista desordenada
+        const productosString = cartDB.productos.map(item => {
+            const producto = item.producto;
+            return `- ${producto.name} - ${item.cantidad} x $${producto.price}\n`;
+        }).join('');
+
+        const bodyMessage = `Hola,\n\n` +
+            `Haz facturado una nueva venta el día ${obtenerFechaActual()}.\n\n` +
+            `¡Gracias por tu atención! \n\n` +
+            `Productos:\n` +
+            `${productosString} \n\n` +
+            `Subtotal: $${cartDB.subtotal}\n` +
+            `IVA: $${cartDB.iva}\n` +
+            `Total: $${cartDB.total}\n\n`;
+
+
+        // Enviar mensaje de WhatsApp
+        await sendWhatsAppMessage("+5213111572896", bodyMessage);
 
 
     } catch (error) {

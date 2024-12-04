@@ -128,7 +128,7 @@ const sendCartEmail = async (email, name, cartDetails) => {
 
     try {
         const response = await mailjetClient.post("send", { version: "v3.1" }).request(emailData);
-        console.log("Correo enviado con éxito:", response.body);
+        // console.log("Correo enviado con éxito:", response.body);
     } catch (error) {
         console.error("Error al enviar el correo:", error.message);
     }
