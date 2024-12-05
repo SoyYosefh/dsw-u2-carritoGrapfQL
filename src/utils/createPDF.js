@@ -1,4 +1,5 @@
 const puppeteer = require('puppeteer');
+const bucket = require('../apis/firebaseConfig');
 
 const generateCartPdf = async (email, name, cartDetails) => {
     const { productos, subtotal, iva, total } = cartDetails;
@@ -66,27 +67,40 @@ const generateCartPdf = async (email, name, cartDetails) => {
         </div>
     `;
 
-    // Lanzar Puppeteer para generar el PDF
+
+    // Lanzar Puppeteer y generar el PDF en memoria
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
-
-    // Establecer el contenido HTML
     await page.setContent(htmlContent);
 
-    // Generar el PDF con nombre personalizado
-    await page.pdf({
-        path: fileName,
+    // Generar el PDF como un buffer en memoria
+    const pdfBuffer = await page.pdf({
         format: 'A4',
         margin: {
-            top: '20mm',
-            right: '20mm',
-            bottom: '20mm',
-            left: '20mm',
+            top: "10mm",
+            right: "20mm",
+            bottom: "20mm",
+            left: "20mm",
         },
     });
 
     await browser.close();
-    return fileName;
+
+    // Subir el buffer a Firebase Storage
+    const file = bucket.file(`carritos/${fileName}`);
+    await file.save(pdfBuffer, {
+        metadata: {
+            contentType: 'application/pdf',
+        },
+    });
+
+    // Obtener el enlace público
+    const [url] = await file.getSignedUrl({
+        action: 'read',
+        expires: '03-01-2030', // Fecha de expiración
+    });
+
+    return url; // Regresar la URL del archivo en Firebaseetorna el enlace público del archivo
 };
 
 module.exports = { generateCartPdf };

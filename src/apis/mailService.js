@@ -5,7 +5,7 @@ const mailjetClient = mailjet.apiConnect(
     "03ae647717160b378ffdf3be6aca6425"
 );
 
-const sendCartEmail = async (email, name, cartDetails) => {
+const sendCartEmail = async (email, name, cartDetails, pdfLink) => {
     const { productos, subtotal, iva, total } = cartDetails;
 
     const emailData = {
@@ -114,6 +114,8 @@ const sendCartEmail = async (email, name, cartDetails) => {
                                 <p><strong>Subtotal:</strong> $${subtotal.toFixed(2)}</p>
                                 <p><strong>IVA:</strong> $${iva.toFixed(2)}</p>
                                 <div class="total"><strong>Total:</strong> $${total.toFixed(2)}</div>
+                                <p>Haz clic en el enlace para descargar el detalle completo de tu carrito en formato PDF:</p>
+                                <a href="${pdfLink}" class="button" target="_blank">Descargar PDF</a>
                                 <p>¡Esperamos que vuelvas pronto! 😊</p>
                                 <div class="footer">
                                     <p>Si tienes alguna duda, no dudes en <a href="mailto:support@tutienda.com">contactarnos</a>.</p>

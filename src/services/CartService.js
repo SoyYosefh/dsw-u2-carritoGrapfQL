@@ -99,19 +99,19 @@ const closeCart = async (cartId) => {
         // const paymentPreference = await MercadoPagoService.createPaymentPreference(cartDB);
         // console.log('Enlace de pago:', paymentPreference.init_point);
 
-        
-
         const cartDetails = {
             productos: cartDB.productos,
             subtotal: cartDB.subtotal,
             iva: cartDB.iva,
             total: cartDB.total,
         };
-        // Enviar correo al usuario
-        // await sendCartEmail(cartDB.usuario.email, cartDB.usuario.name, cartDetails);
 
         // Crear el PDF del carrito
-        await generateCartPdf(cartDB.usuario.email, cartDB.usuario.name, cartDetails);
+        const publicUrl = await generateCartPdf(cartDB.usuario.email, cartDB.usuario.name, cartDetails);
+
+        // Enviar correo al usuario
+        await sendCartEmail(cartDB.usuario.email, cartDB.usuario.name, cartDetails, publicUrl);
+
 
         // Crear la factura en Facturapi
         const facturaApiPayload = {
@@ -136,11 +136,12 @@ const closeCart = async (cartId) => {
         const bodyMessage = `Hola,\n\n` +
             `Haz facturado una nueva venta el día ${obtenerFechaActual()}.\n\n` +
             `¡Gracias por tu atención! \n\n` +
-            `Productos:\n` +
+            `*Productos:*\n` +
             `${productosString} \n\n` +
-            `Subtotal: $${cartDB.subtotal}\n` +
-            `IVA: $${cartDB.iva}\n` +
-            `Total: $${cartDB.total}\n\n`;
+            `*Subtotal:* $${cartDB.subtotal}\n` +
+            `*IVA:* $${cartDB.iva}\n` +
+            `*Total:* $${cartDB.total}\n\n` +
+            `Ve tu factura en el siguiente enlace: ${publicUrl}\n\n`;
 
 
         // Enviar mensaje de WhatsApp
