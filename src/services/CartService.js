@@ -145,7 +145,7 @@ const closeCart = async (cartId) => {
 
 
         // Enviar mensaje de WhatsApp
-        // await sendWhatsAppMessage("+5213111572896", bodyMessage);
+        await sendWhatsAppMessage("+5213111572896", bodyMessage);
 
 
     } catch (error) {

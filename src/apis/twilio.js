@@ -1,7 +1,7 @@
 const twilio = require('twilio');
 
 const accountSid = 'AC104a0fbfba36b5d381ccd5cb15910006';
-const authToken = '6d0f905eac2bd4d01b5d71fbc32d4cb0';
+const authToken = '28df7c1bf9daf15052e0b52e6ba818e6';
 const client = new twilio(accountSid, authToken);
 
 const imageUrl = 'https://despachocontablemexico.com.mx/wp-content/uploads/2021/12/contenido-factura.jpg'; // Cambia esta URL por la imagen que deseas enviar
