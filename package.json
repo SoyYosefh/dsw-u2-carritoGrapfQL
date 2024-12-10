@@ -19,10 +19,10 @@
     "express": "^4.21.1",
     "facturapi": "^4.3.0",
     "firebase-admin": "^13.0.1",
-    "mercadopago": "^2.0.15",
     "mongoose": "^8.7.3",
     "node-mailjet": "^6.0.6",
     "puppeteer": "^23.10.0",
+    "stripe": "^17.4.0",
     "twilio": "^5.3.6"
   }
 }

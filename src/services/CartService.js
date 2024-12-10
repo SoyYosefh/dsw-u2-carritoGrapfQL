@@ -5,7 +5,7 @@ const UserModel = require('../models/UserModel');
 const UserServices = require('./UserService');
 const { sendCartEmail } = require('../apis/mailService');
 const { sendWhatsAppMessage } = require('../apis/twilio');
-// const MercadoPagoService = require('../apis/MercadoPagoService');
+const { createPaymentIntent } = require('../apis/stripeService');
 const { generateCartPdf } = require('../utils/createPDF');
 const mongoose = require('mongoose');
 
@@ -95,9 +95,9 @@ const closeCart = async (cartId) => {
     // Enviar correo al usuario
     try {
 
-        // Hacer pago con Mercado Pago
-        // const paymentPreference = await MercadoPagoService.createPaymentPreference(cartDB);
-        // console.log('Enlace de pago:', paymentPreference.init_point);
+        // Hacer pago con Stripe
+        const paymentIntent = await createPaymentIntent(cartDB.total, cartId, cartDB.usuario._id);
+        console.log('Payment Intent creado:', paymentIntent.id);
 
         const cartDetails = {
             productos: cartDB.productos,
