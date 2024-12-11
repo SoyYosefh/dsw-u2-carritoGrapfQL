@@ -79,7 +79,7 @@ const createCart = async (userId) => {
 // Mutation: cerrar carrito (se cambia solo el estatus a Inactivo y se agrega la fecha de cierre)
 const closeCart = async (cartId) => {
     const cartDB = await CartModel.findById(cartId).populate('productos.producto').populate('usuario');
-
+   
     // Verificar si el carrito existe
     if (!cartDB) {
         throw new Error("El carrito no existe");
@@ -97,7 +97,6 @@ const closeCart = async (cartId) => {
 
         // Hacer pago con Stripe
         const paymentIntent = await createPaymentIntent(cartDB.total, cartId, cartDB.usuario._id);
-        console.log('Payment Intent creado:', paymentIntent.id);
 
         const cartDetails = {
             productos: cartDB.productos,
@@ -125,7 +124,7 @@ const closeCart = async (cartId) => {
         };
 
         // Crear la factura en Facturapi
-        // const factura = await facturapi.createFactura(facturaApiPayload);
+        const factura = await facturapi.createFactura(facturaApiPayload);
 
         // Productos en una cadena de texto en formato de lista desordenada
         const productosString = cartDB.productos.map(item => {
@@ -149,7 +148,7 @@ const closeCart = async (cartId) => {
 
 
     } catch (error) {
-        console.error("Error al enviar el correo:", error.message);
+        console.error("Error:", error.message);
     }
 
     return updatedCart;

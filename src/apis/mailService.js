@@ -1,4 +1,5 @@
 const mailjet = require('node-mailjet')
+const { format } = require('date-fns'); // Importamos date-fns
 
 const mailjetClient = mailjet.apiConnect(
     "f01d3a1006cb06f01400215d4a111dfa",
@@ -7,6 +8,9 @@ const mailjetClient = mailjet.apiConnect(
 
 const sendCartEmail = async (email, name, cartDetails, pdfLink) => {
     const { productos, subtotal, iva, total } = cartDetails;
+
+    // Obtenemos la fecha actual formateada
+    const currentDate = format(new Date(), 'dd/MM/yyyy'); // Formato día/mes/año
 
     const emailData = {
         Messages: [
@@ -21,7 +25,7 @@ const sendCartEmail = async (email, name, cartDetails, pdfLink) => {
                         Name: name,
                     },
                 ],
-                Subject: "Detalles de tu carrito de compras 🛒",
+                Subject: `Detalles de tu carrito de compras 🛒 (${currentDate})`,
                 HTMLPart: `
                     <html>
                         <head>
